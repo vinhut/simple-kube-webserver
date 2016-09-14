@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubetest
+  labels:
+    app: kubetest
+    tier: server
+spec:
+  ports:
+    # the port that this service should serve on
+  - port: 80
+    targetPort: 80
+  selector:
+    app: kubetest
+    tier: server
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kubetest
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: kubetest
+        tier: server
+    spec:
+      containers:
+      - name: kubetest
+        image: dock.vinhut.xyz/kubetest-svc:v0.1.1
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
