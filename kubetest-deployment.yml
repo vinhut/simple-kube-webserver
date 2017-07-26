@@ -7,8 +7,9 @@ metadata:
     tier: server
 spec:
   ports:
-    # the port that this service should serve on
-  - port: 80
+  - name: web
+    protocol: TCP
+    port: 80
     targetPort: 80
   selector:
     app: kubetest
@@ -33,6 +34,13 @@ spec:
           requests:
             cpu: 100m
             memory: 100Mi
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 20
+          timeoutSeconds: 1
+          periodSeconds: 5
         livenessProbe:
           httpGet:
             path: /health
@@ -40,5 +48,19 @@ spec:
             httpHeaders:
               - name: X-Custom-Header
                 value: Test
-          initialDelaySeconds: 10
+          initialDelaySeconds: 25
           periodSeconds: 5
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: kubetest
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: kubetest
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
