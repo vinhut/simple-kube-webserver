@@ -9,7 +9,7 @@ num = random.randint(1, 10)
 
 @app.route('/')
 def home():
-     return "Blue "+str(num)
+     return "Green "+str(num)
 
 @app.route('/health')
 def health():
