@@ -28,8 +28,17 @@ spec:
     spec:
       containers:
       - name: kubetest
-        image: dock.vinhut.xyz/kubetest-svc:v0.1.1
+        image: vinhut/simple-kube-app:green
         resources:
           requests:
             cpu: 100m
             memory: 100Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+            httpHeaders:
+              - name: X-Custom-Header
+                value: Test
+          initialDelaySeconds: 10
+          periodSeconds: 5
