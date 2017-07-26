@@ -1,4 +1,4 @@
-FROM alpine:3.4
+FROM alpine:3.5
 RUN apk add --update python3 openssl
 RUN mkdir -p /app
 WORKDIR /app
