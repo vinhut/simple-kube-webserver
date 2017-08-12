@@ -11,6 +11,7 @@ spec:
     protocol: TCP
     port: 80
     targetPort: 80
+  type: LoadBalancer
   selector:
     app: kubetest
     tier: server
@@ -34,6 +35,9 @@ spec:
           requests:
             cpu: 100m
             memory: 100Mi
+          limits:
+            cpu: 500m
+            memory: 200Mi
         readinessProbe:
           httpGet:
             path: /health
