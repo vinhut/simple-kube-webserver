@@ -7,7 +7,7 @@ metadata:
   name: canary
 spec:
   containers:
-  - image: vinhut/simple-kube-app:blue
+  - image: vinhut/simple-kube-app:base
     resources:
       requests:
         cpu: 100m

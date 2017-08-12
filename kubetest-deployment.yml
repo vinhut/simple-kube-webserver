@@ -11,10 +11,43 @@ spec:
     protocol: TCP
     port: 80
     targetPort: 80
-  type: LoadBalancer
+  type: NodePort
+#  loadBalancerIP: 35.190.57.1
   selector:
     app: kubetest
     tier: server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubetest-int
+  annotations:
+    cloud.google.com/load-balancer-type: "internal"
+  labels:
+    app: kubetest-int
+    tier: server
+spec:
+  ports:
+  - name: web
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  type: LoadBalancer
+  loadBalancerIP: 10.148.0.10
+  selector:
+    app: kubetest
+    tier: server
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: basic-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: kubernetes-service-ip-001
+spec:
+  backend:
+    serviceName: kubetest
+    servicePort: 80
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -67,4 +100,4 @@ spec:
     name: kubetest
   minReplicas: 1
   maxReplicas: 10
-  targetCPUUtilizationPercentage: 70
+  targetCPUUtilizationPercentage: 50
